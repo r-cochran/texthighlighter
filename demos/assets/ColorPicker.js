@@ -5,7 +5,8 @@ var ColorPicker = (function () {
         '#FFFF7B',
         '#F44336',
         '#8BC34A',
-        '#29B6F6'
+        '#29B6F6',
+        "none"
     ];
     var CLASS_SELECTED = 'selected';
 

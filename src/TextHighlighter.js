@@ -35,7 +35,8 @@
      * @returns {boolean}
      */
     function haveSameColor(a, b) {
-        return dom(a).color() === dom(b).color();
+        return $(a).hasClass("highlighted") && $(b).hasClass("highlighted")
+        // return dom(a).color() === dom(b).color();
     }
 
     /**
@@ -432,7 +433,17 @@
             contextClass: 'highlighter-context',
             onRemoveHighlight: function () { return true; },
             onBeforeHighlight: function () { return true; },
-            onAfterHighlight: function () { }
+            onAfterHighlight: function () {
+                $(".erased").each(function(){
+                    var color = $(this).closest(".highlighted").parents()
+                        .filter(function() { 
+                            var color = $(this).css('background-color');
+                            return color != $(".highlighted").css("background-color") && color != "rgba(0, 0, 0, 0)";
+                        }).first().css("background-color");
+                    $(this).css("background-color", color);    
+                });
+                
+            }
         });
 
         dom(this.el).addClass(this.options.contextClass);
@@ -562,7 +573,7 @@
      */
     TextHighlighter.prototype.normalizeHighlights = function (highlights) {
         var normalizedHighlights;
-
+        debugger;
         this.flattenNestedHighlights(highlights);
         this.mergeSiblingHighlights(highlights);
 
@@ -645,6 +656,7 @@
         var self = this;
 
         function shouldMerge(current, node) {
+            debugger;
             return node && node.nodeType === NODE_TYPE.ELEMENT_NODE &&
                 haveSameColor(current, node) &&
                 self.isHighlight(node);
@@ -673,6 +685,11 @@
      * @memberof TextHighlighter
      */
     TextHighlighter.prototype.setColor = function (color) {
+        if(color=="none"){
+            this.options.highlightedClass = "erased";
+        } else {
+            this.options.highlightedClass = "highlighted"
+        }
         this.options.color = color;
     };
 
@@ -942,7 +959,7 @@
      */
     TextHighlighter.createWrapper = function (options) {
         var span = document.createElement('span');
-        span.style.backgroundColor = options.color;
+        // span.style.backgroundColor = options.color;
         span.className = options.highlightedClass;
         return span;
     };
