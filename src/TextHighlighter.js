@@ -35,8 +35,7 @@
      * @returns {boolean}
      */
     function haveSameColor(a, b) {
-        return $(a).hasClass("highlighted") && $(b).hasClass("highlighted")
-        // return dom(a).color() === dom(b).color();
+        return $(a).hasClass("highlighted") && $(b).hasClass("highlighted") && dom(a).color() === dom(b).color();
     }
 
     /**
@@ -573,7 +572,6 @@
      */
     TextHighlighter.prototype.normalizeHighlights = function (highlights) {
         var normalizedHighlights;
-        debugger;
         this.flattenNestedHighlights(highlights);
         this.mergeSiblingHighlights(highlights);
 
@@ -615,12 +613,20 @@
                     if (!haveSameColor(parent, hl)) {
 
                         if (!hl.nextSibling) {
-                            dom(hl).insertBefore(parentNext || parent);
+                            if (!parentNext) {
+                                dom(hl).insertAfter(parent);
+                            } else {
+                                dom(hl).insertBefore(parentNext);
+                            }
                             again = true;
                         }
 
                         if (!hl.previousSibling) {
-                            dom(hl).insertAfter(parentPrev || parent);
+                            if (!parentPrev) {
+                                dom(hl).insertBefore(parent);
+                            } else {
+                                dom(hl).insertAfter(parentPrev);
+                            }
                             again = true;
                         }
 
@@ -656,7 +662,6 @@
         var self = this;
 
         function shouldMerge(current, node) {
-            debugger;
             return node && node.nodeType === NODE_TYPE.ELEMENT_NODE &&
                 haveSameColor(current, node) &&
                 self.isHighlight(node);
@@ -959,7 +964,7 @@
      */
     TextHighlighter.createWrapper = function (options) {
         var span = document.createElement('span');
-        // span.style.backgroundColor = options.color;
+        span.style.backgroundColor = options.color;
         span.className = options.highlightedClass;
         return span;
     };
