@@ -173,12 +173,6 @@ describe('Normalization', function () {
 		highlights: [ 'ipsum dolor sit amet consectetur adipiscit elit.' ]
     });
 
-    testNormalization({ 
-		title: 'use case #20', 
-		fixture: '20', 
-		highlights: [ 'Lorem ipsum ', 'dolor', ' sit ', 'amet' ]
-    });
-
     testNormalization({
         title: 'use case #21',
         fixture: '21',
